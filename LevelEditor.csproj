@@ -8,6 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Sprites\Brick.png" />
+    <None Remove="Sprites\Grass1.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Page Remove="View\App.xaml" />
   </ItemGroup>
 
@@ -22,6 +27,15 @@
 
   <ItemGroup>
     <Folder Include="Model\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Sprites\Brick.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Sprites\Grass1.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
 </Project>
