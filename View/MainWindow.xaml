@@ -54,6 +54,15 @@
                     <Border Name="grass1Border" BorderThickness="2" BorderBrush="Transparent" Grid.Row="0" Grid.Column="2">
                         <Image Name="Grass1" Source="../Sprites/Grass1.png" Width="40" Height="40" Margin="2" Cursor="Hand" Tag="../Sprites/Grass1.png" MouseDown="CopyImage"/>
                     </Border>
+                    <Border Name="SkyBorder" BorderThickness="2" BorderBrush="Transparent" Grid.Row="1" Grid.Column="0">
+                        <Image Name="Sky"  Source="../Sprites/Sky.png" Width="40" Height="40" Margin="2" Cursor="Hand" Tag="../Sprites/Sky.png" MouseDown="CopyImage"/>
+                    </Border>
+                    <Border Name="Cloud1Border" BorderThickness="2" BorderBrush="Transparent" Grid.Row="1" Grid.Column="1">
+                        <Image Name="Cloud1"  Source="../Sprites/Cloud1.png" Width="40" Height="40" Margin="2" Cursor="Hand" Tag="../Sprites/Cloud1.png" MouseDown="CopyImage"/>
+                    </Border>
+                    <Border Name="Cloud2Border" BorderThickness="2" BorderBrush="Transparent" Grid.Row="1" Grid.Column="2">
+                        <Image Name="Cloud2"  Source="../Sprites/Cloud2.png" Width="40" Height="40" Margin="2" Cursor="Hand" Tag="../Sprites/Cloud2.png" MouseDown="CopyImage"/>
+                    </Border>
                 </Grid>
             </Canvas>
         </ScrollViewer>

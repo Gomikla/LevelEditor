@@ -39,12 +39,9 @@ namespace LevelEditor
         public int loadHeigth;
 
         
-
         public static string pathToSprite;
         public string fullPathToSprites;
         public string FullPathToBlankSprite;
-
-        //public List<CellData> CellList = new();
 
         public Grid grid;
         public Button btn;
@@ -72,10 +69,6 @@ namespace LevelEditor
             int width = int.Parse(WidthCounter.Text);
             int heigth = int.Parse(HeightCounter.Text);
 
-            // Create the Grid
-
-            //grid = new Grid();
-
             mvm.MyGrid = new Grid();
 
             mvm.MyGrid.Width = 350;
@@ -85,8 +78,6 @@ namespace LevelEditor
             mvm.MyGrid.HorizontalAlignment = HorizontalAlignment.Center;
 
             mvm.MyGrid.VerticalAlignment = VerticalAlignment.Center;
-
-            //grid.ShowGridLines = true;
 
             for (int i = 0; i < width; i++)
              {
@@ -105,16 +96,11 @@ namespace LevelEditor
                 for(int j = 0; j < heigth; j++)
                 {
                     btn = new Button();
-                    //rec.Stroke = Brushes.Black;
-                    //rec.StrokeThickness = 2;
                     btn.Name = $"mapBtn{i}{j}";
-                    //rec.Tag = $"mapBtn{i}{j}";
-                    btn.Click += new RoutedEventHandler(AddTest);
+                    btn.Click += new RoutedEventHandler(DrawSprite);
                     btn.Focusable = false;
 
-
                     mvm.MyGrid.Children.Add(btn);
-                    //put it in column 0, row 0
                     Grid.SetColumn(btn, i);
                     Grid.SetRow(btn, j);
 
@@ -146,7 +132,6 @@ namespace LevelEditor
 
         private void CopyImage(object sender, MouseButtonEventArgs e)
         {
-            //CopiedImage.Source = ((Image)sender).Source;
             Image img = (Image)sender;
             pathToSprite = img.Tag.ToString();
             SelectedSprite.Source = new BitmapImage(new Uri(pathToSprite, UriKind.RelativeOrAbsolute));
@@ -159,7 +144,7 @@ namespace LevelEditor
             SelectedSprite.Source = new BitmapImage(new Uri("/Sprites/EraserIcon.png", UriKind.RelativeOrAbsolute));
         }
 
-        private void AddTest(object sender, EventArgs e)
+        private void DrawSprite(object sender, EventArgs e)
         {
             if(pathToSprite == null)
             {
@@ -218,7 +203,7 @@ namespace LevelEditor
 
                 btn = new Button();
                 btn.Name = $"mapBtn{gridRows}{gridColumns}";
-                btn.Click += new RoutedEventHandler(AddTest);
+                btn.Click += new RoutedEventHandler(DrawSprite);
                 btn.Focusable = false;
 
 
@@ -238,23 +223,6 @@ namespace LevelEditor
                 brush.ImageSource = bitmap;
                 btn.Background = brush;
             }
-
-            /*for (int i = 0; i < loadWidth; i++)
-            {
-                for (int j = 0; j < loadHeigth; j++)
-                {
-                    btn = new Button();
-                    btn.Name = $"mapBtn{i}{j}";
-                    btn.Click += new RoutedEventHandler(AddTest);
-                    btn.Focusable = false;
-
-
-                    mvm.MyGrid.Children.Add(btn);
-                    Grid.SetColumn(btn, i);
-                    Grid.SetRow(btn, j);
-
-                }
-            }*/
             RootWindow.Content = mvm.MyGrid;
         }
     }
