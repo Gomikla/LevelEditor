@@ -20,6 +20,10 @@ using Path = System.IO.Path;
 using Accessibility;
 using System.Net.Cache;
 using Xceed.Wpf.AvalonDock.Layout;
+using LevelEditor.Model;
+using System.Xml.Linq;
+using System.Diagnostics;
+using LevelEditor.ViewModel;
 
 namespace LevelEditor
 {
@@ -28,12 +32,31 @@ namespace LevelEditor
     /// </summary>
     public partial class MainWindow : Window
     {
-        public static string pathToSprite;
+        public int gridRows;
+        public int gridColumns;
 
-        Image CopiedImage = new Image();
+        public int loadWidth;
+        public int loadHeigth;
+
+        
+
+        public static string pathToSprite;
+        public string fullPathToSprites;
+        public string FullPathToBlankSprite;
+
+        //public List<CellData> CellList = new();
+
+        public Grid grid;
+        public Button btn;
+
+        public MainViewModel mvm;
 
         public MainWindow()
         {
+            DataContext = new MainViewModel();
+            var vm = (MainViewModel)this.DataContext;
+            mvm = vm;
+            FullPathToBlankSprite = Path.GetFullPath(@"..\..\..\Sprites\Blank.png");
             InitializeComponent();
         }
 
@@ -45,57 +68,79 @@ namespace LevelEditor
 
         public void initGrid()
         {
+
             int width = int.Parse(WidthCounter.Text);
             int heigth = int.Parse(HeightCounter.Text);
 
             // Create the Grid
 
-            Grid grid = new Grid();
+            //grid = new Grid();
 
-            grid.Width = 350;
+            mvm.MyGrid = new Grid();
 
-            grid.Height = 350;
+            mvm.MyGrid.Width = 350;
 
-            grid.HorizontalAlignment = HorizontalAlignment.Center;
+            mvm.MyGrid.Height = 350;
 
-            grid.VerticalAlignment = VerticalAlignment.Center;
+            mvm.MyGrid.HorizontalAlignment = HorizontalAlignment.Center;
+
+            mvm.MyGrid.VerticalAlignment = VerticalAlignment.Center;
 
             //grid.ShowGridLines = true;
 
             for (int i = 0; i < width; i++)
              {
                 ColumnDefinition coldef = new ColumnDefinition();
-                grid.ColumnDefinitions.Add(coldef);
+                mvm.MyGrid.ColumnDefinitions.Add(coldef);
             }
 
              for (int i = 0; i < heigth; i++)
              {
                 RowDefinition rowdef = new RowDefinition();
-                grid.RowDefinitions.Add(rowdef);
+                mvm.MyGrid.RowDefinitions.Add(rowdef);
             }
 
              for(int i = 0; i < width; i++)
             {
                 for(int j = 0; j < heigth; j++)
                 {
-                    Button rec = new Button();
+                    btn = new Button();
                     //rec.Stroke = Brushes.Black;
                     //rec.StrokeThickness = 2;
-                    rec.Name = $"mapBtn{i}{j}";
+                    btn.Name = $"mapBtn{i}{j}";
                     //rec.Tag = $"mapBtn{i}{j}";
-                    rec.Click += new RoutedEventHandler(AddTest);
-                    rec.Focusable = false;
+                    btn.Click += new RoutedEventHandler(AddTest);
+                    btn.Focusable = false;
 
 
-                    grid.Children.Add(rec);
+                    mvm.MyGrid.Children.Add(btn);
                     //put it in column 0, row 0
-                    Grid.SetColumn(rec, i);
-                    Grid.SetRow(rec, j);
+                    Grid.SetColumn(btn, i);
+                    Grid.SetRow(btn, j);
+
+                    ImageBrush brush = new ImageBrush();
+                    BitmapImage bitmap = new BitmapImage();
+
+                    bitmap.BeginInit();
+                    bitmap.UriSource = new Uri(FullPathToBlankSprite, UriKind.Absolute);
+                    bitmap.EndInit();
+
+                    brush.ImageSource = bitmap;
+                    btn.Background = brush;
+                    btn.Background = brush;
+
+                    CellData data = new CellData();
+
+                    data.row = Grid.GetRow(btn);
+                    data.column = Grid.GetColumn(btn);
+                    data.path = FullPathToBlankSprite;
+
+                    mvm.CellList.Add(data);
 
                 }
             }
 
-            RootWindow.Content = grid;
+            RootWindow.Content = mvm.MyGrid;
 
         }
 
@@ -103,16 +148,26 @@ namespace LevelEditor
         {
             //CopiedImage.Source = ((Image)sender).Source;
             Image img = (Image)sender;
+            pathToSprite = img.Tag.ToString();            
+        }
 
+        private void EraserSelected(object sender, MouseButtonEventArgs e)
+        {
+            Image img = (Image)sender;
             pathToSprite = img.Tag.ToString();
         }
 
         private void AddTest(object sender, EventArgs e)
         {
+            if(pathToSprite == null)
+            {
+                return;
+            }
+
             var button = sender as Button;
             ImageBrush brush = new ImageBrush();
             BitmapImage bitmap = new BitmapImage();
-            string fullPathToSprites = Path.GetFullPath(@"..\..\" + pathToSprite);
+            fullPathToSprites = Path.GetFullPath(@"..\..\" + pathToSprite);
 
 
             bitmap.BeginInit();
@@ -122,7 +177,83 @@ namespace LevelEditor
             brush.ImageSource = bitmap;
             button.Background = brush;
 
-            //button.Content = CopiedImage;           
+            CellData data = new CellData();
+
+            data.row = Grid.GetRow(button);
+            data.column = Grid.GetColumn(button);
+            data.path = fullPathToSprites;
+
+            mvm.CellList.Add(data);
+        }
+
+        private void LoadButton_Click(object sender, RoutedEventArgs e)
+        {
+            mvm.LoadFromJson();
+
+            mvm.MyGrid = new Grid();
+
+            mvm.MyGrid.Width = 350;
+
+            mvm.MyGrid.Height = 350;
+
+            mvm.MyGrid.HorizontalAlignment = HorizontalAlignment.Center;
+
+            mvm.MyGrid.VerticalAlignment = VerticalAlignment.Center;
+
+            btn = new();
+
+            foreach (CellData data in mvm.CellList)
+            {
+                gridRows = data.row;
+                gridColumns = data.column;
+
+                RowDefinition rowdef = new RowDefinition();
+                mvm.MyGrid.RowDefinitions.Add(rowdef);
+
+
+                ColumnDefinition coldef = new ColumnDefinition();
+                mvm.MyGrid.ColumnDefinitions.Add(coldef);
+
+                btn = new Button();
+                btn.Name = $"mapBtn{gridRows}{gridColumns}";
+                btn.Click += new RoutedEventHandler(AddTest);
+                btn.Focusable = false;
+
+
+                mvm.MyGrid.Children.Add(btn);
+                Grid.SetColumn(btn, gridColumns);
+                Grid.SetRow(btn, gridRows);
+
+                ImageBrush brush = new ImageBrush();
+                BitmapImage bitmap = new BitmapImage();
+                string fullPathToSprites = Path.GetFullPath(data.path);
+
+
+                bitmap.BeginInit();
+                bitmap.UriSource = new Uri(fullPathToSprites, UriKind.Absolute);
+                bitmap.EndInit();
+
+                brush.ImageSource = bitmap;
+                btn.Background = brush;
+            }
+
+            /*for (int i = 0; i < loadWidth; i++)
+            {
+                for (int j = 0; j < loadHeigth; j++)
+                {
+                    btn = new Button();
+                    btn.Name = $"mapBtn{i}{j}";
+                    btn.Click += new RoutedEventHandler(AddTest);
+                    btn.Focusable = false;
+
+
+                    mvm.MyGrid.Children.Add(btn);
+                    Grid.SetColumn(btn, i);
+                    Grid.SetRow(btn, j);
+
+                }
+            }*/
+            RootWindow.Content = mvm.MyGrid;
         }
     }
 }
