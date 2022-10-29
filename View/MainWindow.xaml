@@ -20,6 +20,10 @@
         <Button Name="SaveButton" Width="50" Height="30" Content="Save" HorizontalAlignment="Left" Margin="10,0,0,0" Command="{Binding SaveToJsonCommand}"/>
         <Button Name="LoadButton" Width="50" Height="30" Content="Load" HorizontalAlignment="Left" Margin="80,0,0,0" Command="{Binding LoadFromJsonCommand}" Click="LoadButton_Click"/>
 
+        <Label HorizontalAlignment="Right" Content="Selected Tile: " FontSize="14" FontWeight="Bold" Margin="0,5,45,0"/>
+        <Image Name="SelectedSprite" Source="../Sprites/Blank.png" HorizontalAlignment="Right" Margin="5"/>
+
+
 
         <UserControl Name="RootWindow" Grid.Row="1" Grid.Column="0" BorderBrush="Black" BorderThickness="3" Margin="2">
             <Canvas Name="myCanvas">

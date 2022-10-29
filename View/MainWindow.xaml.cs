@@ -148,13 +148,15 @@ namespace LevelEditor
         {
             //CopiedImage.Source = ((Image)sender).Source;
             Image img = (Image)sender;
-            pathToSprite = img.Tag.ToString();            
+            pathToSprite = img.Tag.ToString();
+            SelectedSprite.Source = new BitmapImage(new Uri(pathToSprite, UriKind.RelativeOrAbsolute));
         }
 
         private void EraserSelected(object sender, MouseButtonEventArgs e)
         {
             Image img = (Image)sender;
             pathToSprite = img.Tag.ToString();
+            SelectedSprite.Source = new BitmapImage(new Uri("/Sprites/EraserIcon.png", UriKind.RelativeOrAbsolute));
         }
 
         private void AddTest(object sender, EventArgs e)
