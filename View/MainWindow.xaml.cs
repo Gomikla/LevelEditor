@@ -24,6 +24,7 @@ using LevelEditor.Model;
 using System.Xml.Linq;
 using System.Diagnostics;
 using LevelEditor.ViewModel;
+using System.Windows.Markup;
 
 namespace LevelEditor
 {
@@ -32,8 +33,8 @@ namespace LevelEditor
     /// </summary>
     public partial class MainWindow : Window
     {
-        public int gridRows;
-        public int gridColumns;
+        public int gridRows = 0;
+        public int gridColumns = 0;
 
         public int loadWidth;
         public int loadHeigth;
@@ -125,7 +126,6 @@ namespace LevelEditor
 
                 }
             }
-
             RootWindow.Content = mvm.MyGrid;
 
         }
@@ -175,6 +175,8 @@ namespace LevelEditor
 
         private void LoadButton_Click(object sender, RoutedEventArgs e)
         {
+            gridRows = 0;
+            gridColumns = 0;    
             mvm.LoadFromJson();
 
             mvm.MyGrid = new Grid();
@@ -189,32 +191,46 @@ namespace LevelEditor
 
             btn = new();
 
-            foreach (CellData data in mvm.CellList)
+            foreach(CellData data in mvm.CellList)
             {
-                gridRows = data.row;
-                gridColumns = data.column;
+                if(data.row > gridRows)
+                {
+                    gridRows = data.row;
+                }
+                if(data.column > gridColumns)
+                {
+                    gridColumns = data.column;
+                }
 
-                RowDefinition rowdef = new RowDefinition();
-                mvm.MyGrid.RowDefinitions.Add(rowdef);
+            }
 
-
+            for (int i = 0; i <= gridColumns; i++)
+            {
                 ColumnDefinition coldef = new ColumnDefinition();
                 mvm.MyGrid.ColumnDefinitions.Add(coldef);
+            }
+
+            for (int i = 0; i <= gridRows; i++)
+            {
+                RowDefinition rowdef = new RowDefinition();
+                mvm.MyGrid.RowDefinitions.Add(rowdef);
+            }
+
+            foreach(CellData data in mvm.CellList)
+            {
 
                 btn = new Button();
-                btn.Name = $"mapBtn{gridRows}{gridColumns}";
+                btn.Name = $"mapBtn{data.row}{data.column}";
                 btn.Click += new RoutedEventHandler(DrawSprite);
                 btn.Focusable = false;
 
-
                 mvm.MyGrid.Children.Add(btn);
-                Grid.SetColumn(btn, gridColumns);
-                Grid.SetRow(btn, gridRows);
+                Grid.SetColumn(btn, data.column);
+                Grid.SetRow(btn, data.row);
 
                 ImageBrush brush = new ImageBrush();
                 BitmapImage bitmap = new BitmapImage();
-                string fullPathToSprites = Path.GetFullPath(data.path);
-
+                fullPathToSprites = Path.GetFullPath(data.path);
 
                 bitmap.BeginInit();
                 bitmap.UriSource = new Uri(fullPathToSprites, UriKind.Absolute);

@@ -10,7 +10,6 @@
   <ItemGroup>
     <None Remove="Sprites\Blank.png" />
     <None Remove="Sprites\Brick.png" />
-    <None Remove="Sprites\Cloud.png" />
     <None Remove="Sprites\Cloud1.png" />
     <None Remove="Sprites\Cloud2.png" />
     <None Remove="Sprites\EraserIcon.png" />
@@ -40,9 +39,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Sprites\Brick.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Sprites\Cloud.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Sprites\Cloud1.png">
