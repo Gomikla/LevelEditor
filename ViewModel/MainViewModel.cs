@@ -6,6 +6,7 @@ using System.IO;
 using System.Windows.Controls;
 using Path = System.IO.Path;
 using Newtonsoft.Json;
+using System.Diagnostics;
 
 namespace LevelEditor.ViewModel
 {

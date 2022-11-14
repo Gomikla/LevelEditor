@@ -81,13 +81,13 @@ namespace LevelEditor
             mvm.MyGrid.VerticalAlignment = VerticalAlignment.Center;
 
             for (int i = 0; i < width; i++)
-             {
+            {
                 ColumnDefinition coldef = new ColumnDefinition();
                 mvm.MyGrid.ColumnDefinitions.Add(coldef);
             }
 
-             for (int i = 0; i < heigth; i++)
-             {
+            for (int i = 0; i < heigth; i++)
+            {
                 RowDefinition rowdef = new RowDefinition();
                 mvm.MyGrid.RowDefinitions.Add(rowdef);
             }
